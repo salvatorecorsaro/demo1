@@ -13,7 +13,7 @@ spec:
       labels:
         app: springboot-demo
       annotations:
-        timestamp: "2023-10-27T05:56:48Z"
+        timestamp: "2023-10-27T06:02:22Z"
     spec:
       imagePullSecrets:
         - name: dockerhub-regcred
