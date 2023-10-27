@@ -1,0 +1,29 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: Repository
+# metadata:
+#   name: backstage-github-repo
+#   namespace: argocd
+# spec:
+#   url: https://github.com/gincol-backstage/nodejs-dev
+#   type: git
+#   insecureIgnoreHostKey: true
+#   passwordSecret:
+#     name: backstage-github-credentials
+#     key: password
+#   usernameSecret:
+#     name: backstage-github-credentials
+#     key: username
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: workshophubdev-github-credentials-springboot-demo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+type: Opaque
+data:
+  type: Z2l0 #git
+  url: aHR0cHM6Ly9naXRodWIuY29tL3dvcmtzaG9waHViZGV2L3NwcmluZ2Jvb3QtZGVtbw== #https://github.com/workshophubdev/springboot-demo
+  username: d29ya3Nob3BodWJkZXY= #workshophubdev
+  password: Z2hwX2VUa2I1MjdKUnlTYWxzNmxCWDhQM1JYNFNpanpmVDF6S0RHbg== #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

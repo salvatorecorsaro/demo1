@@ -1,0 +1,59 @@
+version: 2.1
+
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: workshophubdev/springboot-demo
+    docker:
+      - image: cimg/openjdk:17.0.0
+
+jobs:
+  build:
+    executor: docker-publisher
+    parallelism: 1
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Create jar file
+          command: |
+            mvn clean package
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t $IMAGE_NAME:latest .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+            docker push $IMAGE_NAME:latest
+      - run:
+          name: Update timestamp annotation
+          command: |
+            git config --global user.email "${GITHUB_USERNAME}@gmail.com"
+            git config --global user.name "${GITHUB_USERNAME}"
+
+            # Obtener los últimos cambios del repositorio remoto
+            git fetch origin
+            git rebase origin/main
+
+            # Actualizar la anotación timestamp
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            sed -i 's|timestamp:.*|timestamp: "'"$TIMESTAMP"'"|' cloud/ocp/01-deployment.yaml
+
+            # Commit y push los cambios
+            git add cloud/ocp/01-deployment.yaml
+            git commit -m "Update timestamp annotation [ci skip]"
+            git push https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GITHUB_USERNAME}/springboot-demo.git HEAD:main
+
+
+workflows:
+  version: 2
+  build-and-publish:
+    jobs:
+      - build:
+          context: workshophubdev
+          filters:
+            branches:
+              only:
+                - main  # O cambia a master si estás usando esa rama

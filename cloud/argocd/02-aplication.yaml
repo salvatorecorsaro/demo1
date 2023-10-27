@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: springboot-demo
+  namespace: argocd
+spec:
+  project: workshophubdev
+  source:
+    repoURL: 'https://github.com/workshophubdev/springboot-demo.git'
+    targetRevision: HEAD
+    path: cloud/ocp
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: workshophubdev
+  syncPolicy:
+    automated:
+      prune: true  
+      selfHeal: true  

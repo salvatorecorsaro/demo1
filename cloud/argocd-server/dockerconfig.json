@@ -1,0 +1,10 @@
+{
+  "auths": {
+    "https://index.docker.io/v1/": {
+      "username": "workshophubdev",
+      "password": "iaGenerativa23",
+      "email": "workshophubdev@gmail.com",
+      "auth": "d29ya3Nob3BodWJkZXY6aWFHZW5lcmF0aXZhMjM="
+    }
+  }
+}
